@@ -1,0 +1,166 @@
+@model WebApp.Models.UserTriggerModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1 class="stat-header">Your Real Estate Price Statistic triggers</h1>
+
+<div class="trigger-filter-box">
+  <div class="filters_container">
+  <form id="user-trigger-form" class="filter-form" asp-action="">
+      
+    <div class="one-filter-box"> 
+      <label for="countySelect" class="form-label">County:</label>
+      <select id="countySelect" class="form-select select-auto-width filter-inputs" required>
+
+        <option value=""></option>
+        @foreach (var county in Model.Counties!)
+        {
+          <option value="@county.Id">@county.Name</option>
+        }
+      </select>
+    </div> 
+    <div class="one-filter-box">
+      <label for="parishSelect" class="form-label">Parish:</label>
+      <select id="parishSelect" class="form-select select-auto-width filter-inputs">
+        <option value=""></option>
+      </select>
+    </div> 
+    <div class="one-filter-box">
+      <label for="citySelect" class="form-label">City:</label>
+      <select id="citySelect" class="form-select select-auto-width filter-inputs">
+        <option value=""></option>
+      </select>
+    </div>
+    <div class="one-filter-box">
+      <label for="streetSelect" class="form-label">Street:</label>
+      <select id="streetSelect" class="form-select select-auto-width filter-inputs">
+        <option value=""></option>
+      </select>
+    </div>
+
+    <div class="one-filter-box">
+      <label for="transactionType" class="form-label">Transaction Type:</label>
+      <select id="transactionType" class="form-select select-auto-width filter-inputs" required>
+        <option value=""></option>
+        <option value="443ad575-7cb0-4773-bc45-cef425e130b7">Sale</option>
+        <option value="fad0c2eb-7502-46a0-b52c-47d29c8a8ca7">Rent</option>
+      </select>
+    </div>
+      
+    <div class="one-filter-box">
+      <label for="propertyType" class="form-label">Property Type:</label>
+      <select id="propertyType" class="form-select select-auto-width filter-inputs" required>
+        <option value=""></option>
+        @foreach (var type in Model.PropertyTypes!)
+        {
+          <option value="@type.Id">@type.Name</option>
+        }
+      </select>
+    </div>
+
+    <fieldset>
+      <legend>Rooms:</legend>
+      <label for="MinRoomsCount" class="form-label">Min: </label>
+      <input type="number" id="MinRoomsCount" class="filter-inputs"/>
+      <span> - </span>
+      <label for="MaxRoomsCount" class="form-label">Max: </label>
+      <input type="number" id="MaxRoomsCount" class="filter-inputs"/>
+    </fieldset>
+
+    <fieldset>
+      <legend>Area:</legend>
+      <label for="MinArea" class="form-label">Min: </label>
+      <input type="number" id="MinArea" class="filter-inputs"/>
+      <span> - </span>
+      <label for="MaxArea" class="form-label">Max: </label>
+      <input type="number" id="MaxArea" class="filter-inputs"/>
+    </fieldset>
+      
+    <div class="one-filter-box">
+      <label for="TriggerPricePerUnit" class="form-label">Ideal Price/Unit: </label>
+      <input type="number" id="TriggerPricePerUnit" class="filter-inputs"/>
+    </div>
+    
+    <div class="one-filter-box">
+      <label for="TriggerName" class="form-label">Trigger Name: </label>
+      <input id="TriggerName" class="filter-inputs"/>
+    </div>
+    
+    <div class="form-group">
+      <button id="triggerButton" type="submit" class="big-button">Add Trigger</button>
+    </div>
+  </form>
+  </div>
+</div>
+
+<div class="user-triggers">
+  @foreach (var item in Model.Triggers!) {
+    <div class="trigger-body user-trigger-box w-50" id="wrap-@item!.Id">
+      <div class="quote-box page-font">
+        <div class="trigger-box-data">
+          <form method="post" class="delete-user-trigger" id="@item!.Id" data-trigger-id="@item!.Id">
+            <button type="submit" class="deleteButton btn-close custom-close-btn" aria-label="Close"></button>
+          </form>
+          <h1 class="card-title">@Html.DisplayFor(modelItem => item!.Name)</h1>
+          <span>Ideal PPU: @Html.DisplayFor(modelItem => item!.UserSquareMeterPrice) €</span>
+          <br>
+          <span>Current PPU: @Html.DisplayFor(modelItem => item!.BeginningSquareMeterPrice) €</span>
+          </div>
+        <hr>
+        <h6>Filters: </h6>
+        <div class="filter-tags-box">
+          @foreach (var filter in item!.TriggerFilters!)
+          {
+            <div class="filter-tag">
+              @if (filter.Filter!.FilterType!.Name == "County" && filter.Filter.Region != null)
+              {
+                <span class="card-text">@filter.Filter!.Region!.Name</span>
+              }
+
+              else if (filter.Filter!.FilterType!.Name == "Parish" && filter.Filter.Region != null)
+              {
+                <span class="card-text">@filter.Filter.Region!.Name</span>
+              }
+
+              else if (filter.Filter!.FilterType!.Name == "City" && filter.Filter.Region != null)
+              {
+                <span class="card-text">@filter.Filter.Region!.Name</span>
+              }
+
+              else if (filter.Filter!.FilterType!.Name == "Street" && filter.Filter.Region != null)
+              {
+                <span class="card-text">@filter.Filter.Region!.Name</span>
+              }
+              else if (filter.Filter!.FilterType!.Name == "TransactionType" && filter.Filter.TransactionType != null)
+              {
+                <span class="card-text">@filter.Filter.TransactionType!.Name</span>
+              }
+              else if (filter.Filter!.FilterType!.Name == "PropertyType" && filter.Filter.PropertyType != null)
+              {
+                <span class="card-text">@filter.Filter.PropertyType!.Name</span>
+              }
+              else if (filter.Filter!.FilterType!.Name == "RoomsCountMin" && filter.Filter.Value != null)
+              {
+                <span class="card-text">Min Rooms: @filter.Filter.Value</span>
+              }
+              else if (filter.Filter!.FilterType!.Name == "RoomsCountMax" && filter.Filter.Value != null)
+              {
+                <span class="card-text">Max Rooms: @filter.Filter.Value</span>
+              }
+              else if (filter.Filter!.FilterType!.Name == "AreaMin" && filter.Filter.Value != null)
+              {
+                <span class="card-text">Min Area: @filter.Filter.Value</span>
+              }
+              else if (filter.Filter!.FilterType!.Name == "AreaMax" && filter.Filter.Value != null)
+              {
+                <span class="card-text">Max Area: @filter.Filter.Value</span>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  }
+</div>

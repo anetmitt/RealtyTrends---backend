@@ -1,0 +1,154 @@
+@model WebApp.Models.PriceStatisticsModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+<h1 class="stat-header">Real Estate Price Statistics</h1>
+
+<div class="statistics-container">
+  <div class="filters_container">
+    <form id="filters-form" class="filter-form" asp-action="GetPriceStatistics">
+      
+        <div class="one-filter-box"> 
+          <label for="countySelect" class="form-label">County:</label>
+          <select id="countySelect" class="form-select select-auto-width filter-inputs" required>
+
+            <option value=""></option>
+            @foreach (var county in Model.Counties!)
+            {
+              <option value="@county.Id">@county.Name</option>
+            }
+          </select>
+        </div> 
+        <div class="one-filter-box">
+          <label for="parishSelect" class="form-label">Parish:</label>
+          <select id="parishSelect" class="form-select select-auto-width filter-inputs">
+            <option value=""></option>
+          </select>
+        </div> 
+        <div class="one-filter-box">
+          <label for="citySelect" class="form-label">City:</label>
+          <select id="citySelect" class="form-select select-auto-width filter-inputs">
+            <option value=""></option>
+          </select>
+        </div>
+        <div class="one-filter-box">
+          <label for="streetSelect" class="form-label">Street:</label>
+          <select id="streetSelect" class="form-select select-auto-width filter-inputs">
+            <option value=""></option>
+          </select>
+        </div>
+
+      <div class="one-filter-box">
+        <label for="transactionType" class="form-label">Transaction Type:</label>
+        <select id="transactionType" class="form-select select-auto-width filter-inputs" required>
+          <option value=""></option>
+          <option value="443ad575-7cb0-4773-bc45-cef425e130b7">Sale</option>
+          <option value="fad0c2eb-7502-46a0-b52c-47d29c8a8ca7">Rent</option>
+        </select>
+      </div>
+      
+      <div class="one-filter-box">
+        <label for="propertyType" class="form-label">Property Type:</label>
+        <select id="propertyType" class="form-select select-auto-width filter-inputs" required>
+          <option value=""></option>
+          @foreach (var type in Model.PropertyTypes!)
+          {
+            <option value="@type.Id">@type.Name</option>
+          }
+        </select>
+      </div>
+      
+      <div class="one-filter-box">
+        <label for="startYear" class="form-label">From Year:</label>
+        <select id="startYear" class="form-select select-auto-width filter-inputs" required>
+          <option value=""></option>
+          @foreach (var year in Model.Years!)
+          {
+            <option value="@year">@year</option>
+          }
+        </select>
+      </div>
+      
+      <div class="one-filter-box">
+        <label for="startMonth" class="form-label">From Month:</label>
+        <select id="startMonth" class="form-select select-auto-width filter-inputs" required>
+          <option value=""></option>
+        </select>
+      </div>
+      
+      <div class="one-filter-box">
+        <label for="startDay" class="form-label">From Day:</label>
+        <select id="startDay" class="form-select select-auto-width filter-inputs" required>
+          <option value=""></option>
+        </select>
+      </div>
+      
+      <div class="one-filter-box">
+        <label for="endYear" class="form-label">To Year:</label>
+        <select id="endYear" class="form-select select-auto-width filter-inputs">
+          <option value=""></option>
+          @foreach (var year in Model.Years!)
+          {
+            <option value="@year">@year</option>
+          }
+        </select>
+      </div>
+      
+      <div class="one-filter-box">
+        <label for="endMonth" class="form-label">To Month:</label>
+        <select id="endMonth" class="form-select select-auto-width filter-inputs">
+          <option value=""></option>
+        </select>
+      </div>
+      
+      <div class="one-filter-box">
+        <label for="endDay" class="form-label">To Day:</label>
+        <select id="endDay" class="form-select select-auto-width filter-inputs">
+          <option value=""></option>
+        </select>
+      </div>
+      
+
+      <fieldset>
+        <legend>Rooms:</legend>
+        <label for="MinRoomsCount" class="form-label">Min: </label>
+        <input type="number" id="MinRoomsCount" class="filter-inputs"/>
+        <span> - </span>
+        <label for="MaxRoomsCount" class="form-label">Max: </label>
+        <input type="number" id="MaxRoomsCount" class="filter-inputs"/>
+      </fieldset>
+
+      <fieldset>
+        <legend>Price Per Unit:</legend>
+        <label for="MinPricePerUnit" class="form-label">Min: </label>
+        <input type="number" id="MinPricePerUnit" class="filter-inputs"/>
+        <span> - </span>
+        <label for="MaxPricePerUnit" class="form-label">Max: </label>
+        <input type="number" id="MaxPricePerUnit" class="filter-inputs"/>
+      </fieldset>
+
+      <fieldset>
+        <legend>Area:</legend>
+        <label for="MinArea" class="form-label">Min: </label>
+        <input type="number" id="MinArea" class="filter-inputs"/>
+        <span> - </span>
+        <label for="MaxArea" class="form-label">Max: </label>
+        <input type="number" id="MaxArea" class="filter-inputs"/>
+      </fieldset>
+
+      <div class="form-group">
+        <button id="submitButton" type="submit" class="big-button">Get Stats</button>
+      </div>
+    </form>
+  </div>
+  
+  <div class="graph-container">
+    <div class="graph-inner-box">
+      <script src="https://d3js.org/d3.v6.js"></script>
+      <div id="graphContainer"></div>
+    </div>
+  </div>
+  
+
+</div>
